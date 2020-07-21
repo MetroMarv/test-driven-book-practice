@@ -1,0 +1,8 @@
+# Test List
+
+* Template "Hello ${name}" with value "Reader" for variable "name" will be rendered as "Hello Reader"
+* Template "${greeting}, ${name}" with the value "Reader" for variable "name" and value "Hi" for variable "greeting",
+  will be rendered as "Hi, Reader"
+* Rendering template "Hello, ${name}" with no value provided will lead to an MissingValueError
+* Template "Hello, ${name}" with the value "Reader" for variable "name" and value "whatever" for variable "unused",
+  will be rendered as "Hello, Reader"
