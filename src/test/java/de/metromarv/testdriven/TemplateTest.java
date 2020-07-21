@@ -21,4 +21,17 @@ class TemplateTest {
         // then
         assertThat(result).isEqualTo("Hello, Peter");
     }
+    
+    @Test
+    void replacesSinglePlaceholderInOtherTemplate() {
+        // given
+        Template template = new Template("Tjena, ${name}");
+        template.set("name", "Homer");
+        
+        // when
+        String result = template.evaluate();
+        
+        // then
+        assertThat(result).isEqualTo("Tjena, Homer");
+    }
 }
