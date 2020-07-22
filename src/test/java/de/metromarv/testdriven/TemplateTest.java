@@ -34,4 +34,19 @@ class TemplateTest {
         // then
         assertThat(result).isEqualTo("Tjena, Homer");
     }
+    
+    @Test
+    void replaceMultiplePlaceholders() {
+        // given
+        Template template = new Template("${one}, ${two}, ${three}");
+        template.set("one", "1");
+        template.set("two", "2");
+        template.set("three", "3");
+        
+        // when
+        String result = template.evaluate();
+        
+        // then
+        assertThat(result).isEqualTo("1, 2, 3");
+    }
 }
