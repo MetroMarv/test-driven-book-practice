@@ -2,13 +2,4 @@
 
 ## Template
 
-* Template "${one}, ${two}, ${three}" with the values "one" -> "${one}", "two" -> "${three}" and "three" -> "${two}"
-  should render as "${one}, ${three}, ${two}"
-* Template "${one}, ${two}, ${three}" with the value "1" for variable "one", value ""${foo}" for variable "two" and
-  value "3" for variable "three" should render as "1, ${foo}, 3"
-
 ## Template Parser
-
-* Template "${one}, ${two}" should be parsed to a list with three elements: "${one}", ", " and "${two}"
-* More complicated template "before text ${variable} in between text ${other} trailing text" will be parsed as five
-  elements: PlainText(...), Variable(...), PlainText(), Var(), Plaintext

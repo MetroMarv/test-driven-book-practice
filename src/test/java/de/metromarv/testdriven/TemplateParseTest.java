@@ -29,6 +29,15 @@ public class TemplateParseTest {
         assertSegmentsContain(segments, new Variable("one"), new PlainText(", "), new Variable("two"));
     }
     
+    @Test
+    void parseLongTemplate() {
+        String template = "before text ${variable} in between text ${other} trailing text";
+        List<Segment> segments = parseTemplateToSegments(template);
+        
+        assertSegmentsContain(segments, new PlainText("before text "), new Variable("variable"),
+            new PlainText(" in between text "), new Variable("other"), new PlainText(" trailing text"));
+    }
+    
     private List<Segment> parseTemplateToSegments(String templateString) {
         TemplateParse parser = new TemplateParse(templateString);
         return parser.parse();
