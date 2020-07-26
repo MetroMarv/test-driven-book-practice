@@ -1,9 +1,8 @@
 package de.metromarv.testdriven;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Template {
     
@@ -20,26 +19,40 @@ public class Template {
     }
     
     public String evaluate() throws MissingValueException {
-        String result = replaceVariables();
-        checkForMissingValues(result);
-    
-        return result;
+        TemplateParse templateParse = new TemplateParse(templateString);
+        List<String> segments = templateParse.parse();
+        return concatenate(segments);
     }
     
-    private String replaceVariables() {
-        String result = templateString;
+    private String concatenate(List<String> segments) throws MissingValueException {
+        StringBuilder resultBuilder = new StringBuilder();
         
-        for (Map.Entry<String, String> variable : variables.entrySet()) {
-            String regex = "\\$\\{" + variable.getKey() + "}";
-            result = result.replaceAll(regex, variable.getValue());
+        for (String segment : segments) {
+            resultBuilder.append(evaluateSegment(segment));
         }
-        return result;
+        
+        return resultBuilder.toString();
     }
     
-    private void checkForMissingValues(String result) throws MissingValueException {
-        Matcher matcher = Pattern.compile("\\$\\{.*}").matcher(result);
-        if (matcher.find()) {
-            throw new MissingValueException("No value for placeholder " + matcher.group() + " provided.");
+    private String evaluateSegment(String segment) throws MissingValueException {
+        if (isVariable(segment)) {
+            return evaluateVariable(segment);
+        } else {
+            return segment;
         }
+    }
+    
+    private String evaluateVariable(String segment) throws MissingValueException {
+        String varName = segment.substring(2, segment.length() - 1);
+        
+        if (!variables.containsKey(varName)) {
+            throw new MissingValueException("No value for placeholder ${" + varName + "} provided.");
+        }
+        
+        return variables.get(varName);
+    }
+    
+    private boolean isVariable(String segment) {
+        return segment.startsWith("${") && segment.endsWith("}");
     }
 }
