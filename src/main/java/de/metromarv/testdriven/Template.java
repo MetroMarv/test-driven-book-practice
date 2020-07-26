@@ -20,39 +20,17 @@ public class Template {
     
     public String evaluate() throws MissingValueException {
         TemplateParse templateParse = new TemplateParse(templateString);
-        List<String> segments = templateParse.parse();
+        List<Segment> segments = templateParse.parse();
         return concatenate(segments);
     }
     
-    private String concatenate(List<String> segments) throws MissingValueException {
+    private String concatenate(List<Segment> segments) throws MissingValueException {
         StringBuilder resultBuilder = new StringBuilder();
         
-        for (String segment : segments) {
-            resultBuilder.append(evaluateSegment(segment));
+        for (Segment segment : segments) {
+            resultBuilder.append(segment.evaluate(variables));
         }
         
         return resultBuilder.toString();
-    }
-    
-    private String evaluateSegment(String segment) throws MissingValueException {
-        if (isVariable(segment)) {
-            return evaluateVariable(segment);
-        } else {
-            return segment;
-        }
-    }
-    
-    private String evaluateVariable(String segment) throws MissingValueException {
-        String varName = segment.substring(2, segment.length() - 1);
-        
-        if (!variables.containsKey(varName)) {
-            throw new MissingValueException("No value for placeholder ${" + varName + "} provided.");
-        }
-        
-        return variables.get(varName);
-    }
-    
-    private boolean isVariable(String segment) {
-        return segment.startsWith("${") && segment.endsWith("}");
     }
 }

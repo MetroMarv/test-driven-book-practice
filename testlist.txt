@@ -10,3 +10,5 @@
 ## Template Parser
 
 * Template "${one}, ${two}" should be parsed to a list with three elements: "${one}", ", " and "${two}"
+* More complicated template "before text ${variable} in between text ${other} trailing text" will be parsed as five
+  elements: PlainText(...), Variable(...), PlainText(), Var(), Plaintext

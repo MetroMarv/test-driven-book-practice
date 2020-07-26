@@ -3,6 +3,7 @@ package de.metromarv.testdriven;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,53 +11,62 @@ public class TemplateParse {
     
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{[a-zA-Z]+}");
     
-    private String templateString;
+    private final String templateString;
     
     public TemplateParse(String templateString) {
         this.templateString = templateString;
     }
     
-    public List<String> parse() {
+    public List<Segment> parse() {
         if (templateString.isEmpty()) {
-            return Collections.singletonList("");
+            return Collections.singletonList(new PlainText(""));
         }
         
         return parseSegments();
     }
     
-    private ArrayList<String> parseSegments() {
+    private List<Segment> parseSegments() {
         Matcher matcher = VARIABLE_PATTERN.matcher(templateString);
         
-        ArrayList<String> segments = new ArrayList<>();
+        ArrayList<Segment> segments = new ArrayList<>();
         
         int currentIndex = 0;
         
         while (matcher.find()) {
-            addPrecedingPlainText(segments, currentIndex, matcher);
-            addVariable(segments, matcher);
+            Optional<PlainText> precedingSegment = createPlainTextForPrecedingText(currentIndex, matcher);
+            precedingSegment.ifPresent(segments::add);
+            
+            segments.add(createVariable(matcher));
             
             currentIndex = matcher.end();
         }
         
-        addRemainingPlainText(segments, currentIndex);
+        Optional<PlainText> trailingText = createPlainTextForRemainingText(currentIndex);
+        trailingText.ifPresent(segments::add);
         
         return segments;
     }
     
-    private void addPrecedingPlainText(ArrayList<String> segments, int currentIndex, Matcher matcher) {
+    private Optional<PlainText> createPlainTextForPrecedingText(int currentIndex, Matcher matcher) {
         if (matcher.start() > currentIndex) {
-            segments.add(templateString.substring(currentIndex, matcher.start()));
+            String precedingText = templateString.substring(currentIndex, matcher.start());
+            return Optional.of(new PlainText(precedingText));
         }
+        
+        return Optional.empty();
     }
     
-    private void addVariable(ArrayList<String> segments, Matcher matcher) {
-        String segment = templateString.substring(matcher.start(), matcher.end());
-        segments.add(segment);
+    private Variable createVariable(Matcher matcher) {
+        String variableName = templateString.substring(matcher.start() + 2, matcher.end() - 1);
+        return new Variable(variableName);
     }
     
-    private void addRemainingPlainText(ArrayList<String> segments, int currentIndex) {
+    private Optional<PlainText> createPlainTextForRemainingText(int currentIndex) {
         if (currentIndex < templateString.length()) {
-            segments.add(templateString.substring(currentIndex));
+            String trailingText = templateString.substring(currentIndex);
+            return Optional.of(new PlainText(trailingText));
         }
+        
+        return Optional.empty();
     }
 }

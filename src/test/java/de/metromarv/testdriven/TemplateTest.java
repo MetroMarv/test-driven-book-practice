@@ -27,17 +27,14 @@ class TemplateTest {
     void ignoresUnusedVariable() throws MissingValueException {
         template.set("unused", "whatever");
         assertTemplateEvaluatesTo("1, 2, 3");
-    
+        
     }
     
     @Test
     void throwsExceptionIfPlaceholderNotProvided() {
         Template template = new Template("Hello, ${name}");
-    
-        MissingValueException exception = Assertions.assertThrows(MissingValueException.class,
-            template::evaluate);
-    
-        assertThat(exception).hasMessage("No value for placeholder ${name} provided.");
+        
+        Assertions.assertThrows(MissingValueException.class, template::evaluate);
     }
     
     @Test

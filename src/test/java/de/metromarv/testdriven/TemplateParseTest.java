@@ -2,7 +2,6 @@ package de.metromarv.testdriven;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,33 +9,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TemplateParseTest {
     
     @Test
-    void emptyTemplateResultsInEmptyString() {
-        String templateString = "";
-        List<String> segments = parseTemplate(templateString);
+    void emptyTemplateResultsInEmptyStringSegment() {
+        List<Segment> segments = parseTemplateToSegments("");
         
-        assertSegments(segments, templateString);
+        assertSegmentsContain(segments, new PlainText(""));
     }
     
     @Test
     void plainTextTemplateResultsInSingleSegment() {
-        List<String> segments = parseTemplate("my plain text");
+        List<Segment> segments = parseTemplateToSegments("my plain text");
         
-        assertSegments(segments, "my plain text");
+        assertSegmentsContain(segments, new PlainText("my plain text"));
     }
     
     @Test
     void parseMultipleSegments() {
-        List<String> segments = parseTemplate("${one}, ${two}");
-        assertSegments(segments, "${one}", ", ", "${two}");
+        List<Segment> segments = parseTemplateToSegments("${one}, ${two}");
+        
+        assertSegmentsContain(segments, new Variable("one"), new PlainText(", "), new Variable("two"));
     }
     
-    private List<String> parseTemplate(String templateString) {
-        TemplateParse parse = new TemplateParse(templateString);
-        return parse.parse();
+    private List<Segment> parseTemplateToSegments(String templateString) {
+        TemplateParse parser = new TemplateParse(templateString);
+        return parser.parse();
     }
     
-    private void assertSegments(List<String> segments, String... expectedSegments) {
-        assertThat(segments).hasSize(expectedSegments.length);
-        assertThat(segments).isEqualTo(Arrays.asList(expectedSegments));
+    private void assertSegmentsContain(List<Segment> segments, Segment... expectedSegments) {
+        assertThat(segments).containsExactly(expectedSegments);
     }
 }
