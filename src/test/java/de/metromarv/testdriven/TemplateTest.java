@@ -1,5 +1,6 @@
 package de.metromarv.testdriven;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,18 +19,28 @@ class TemplateTest {
     }
     
     @Test
-    void replaceMultiplePlaceholders() {
+    void replaceMultiplePlaceholders() throws MissingValueException {
         assertTemplateEvaluatesTo("1, 2, 3");
     }
     
     @Test
-    void ignoresUnusedVariable() {
+    void ignoresUnusedVariable() throws MissingValueException {
         template.set("unused", "whatever");
         assertTemplateEvaluatesTo("1, 2, 3");
     
     }
     
-    private void assertTemplateEvaluatesTo(String expectedValue) {
+    @Test
+    void throwsExceptionIfPlaceholderNotProvided() {
+        Template template = new Template("Hello, ${name}");
+    
+        MissingValueException exception = Assertions.assertThrows(MissingValueException.class,
+            template::evaluate);
+    
+        assertThat(exception).hasMessage("No value for placeholder ${name} provided.");
+    }
+    
+    private void assertTemplateEvaluatesTo(String expectedValue) throws MissingValueException {
         String result = template.evaluate();
         
         assertThat(result).isEqualTo(expectedValue);
