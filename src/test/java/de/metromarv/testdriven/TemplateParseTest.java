@@ -24,6 +24,12 @@ public class TemplateParseTest {
         assertSegments(segments, "my plain text");
     }
     
+    @Test
+    void parseMultipleSegments() {
+        List<String> segments = parseTemplate("${one}, ${two}");
+        assertSegments(segments, "${one}", ", ", "${two}");
+    }
+    
     private List<String> parseTemplate(String templateString) {
         TemplateParse parse = new TemplateParse(templateString);
         return parse.parse();
