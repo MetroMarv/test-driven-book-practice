@@ -2,6 +2,7 @@ package de.metromarv.testdriven;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,19 +11,26 @@ public class TemplateParseTest {
     
     @Test
     void emptyTemplateResultsInEmptyString() {
-        TemplateParse parse = new TemplateParse("");
-        List<String> segments = parse.parse();
+        String templateString = "";
+        List<String> segments = parseTemplate(templateString);
         
-        assertThat(segments).hasSize(1);
-        assertThat(segments.get(0)).isEqualTo("");
+        assertSegments(segments, templateString);
     }
     
     @Test
     void plainTextTemplateResultsInSingleSegment() {
-        TemplateParse parse = new TemplateParse("my plain text");
-        List<String> segments = parse.parse();
+        List<String> segments = parseTemplate("my plain text");
         
-        assertThat(segments).hasSize(1);
-        assertThat(segments.get(0)).isEqualTo("my plain text");
+        assertSegments(segments, "my plain text");
+    }
+    
+    private List<String> parseTemplate(String templateString) {
+        TemplateParse parse = new TemplateParse(templateString);
+        return parse.parse();
+    }
+    
+    private void assertSegments(List<String> segments, String... expectedSegments) {
+        assertThat(segments).hasSize(expectedSegments.length);
+        assertThat(segments).isEqualTo(Arrays.asList(expectedSegments));
     }
 }
