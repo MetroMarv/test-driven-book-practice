@@ -1,5 +1,7 @@
 # Test List
 
+* Template "${one}, ${two}, ${three}" with the values "one" -> "${one}", "two" -> "${three}" and "three" -> "${two}"
+  should render as "${one}, ${three}, ${two}"
 * Template "${one}, ${two}, ${three}" with the value "1" for variable "one", value ""${foo}" for variable "two" and
   value "3" for variable "three" should render as "1, ${foo}, 3"
 

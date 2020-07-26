@@ -40,6 +40,15 @@ class TemplateTest {
         assertThat(exception).hasMessage("No value for placeholder ${name} provided.");
     }
     
+    @Test
+    void templateIsJustProcessedOnce() throws MissingValueException {
+        template.set("one", "${one}");
+        template.set("two", "${three}");
+        template.set("three", "${two}");
+        
+        assertTemplateEvaluatesTo("${one}, ${three}, ${two}");
+    }
+    
     private void assertTemplateEvaluatesTo(String expectedValue) throws MissingValueException {
         String result = template.evaluate();
         
