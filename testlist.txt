@@ -1,10 +1,13 @@
 # Test List
 
+* Rendering template "Hello, ${name}" with no value provided will lead to an MissingValueError
+* Template "${one}, ${two}, ${three}" with the value "1" for variable "one", value ""${foo}" for variable "two" and
+  value "3" for variable "three" should render as "1, ${foo}, 3"
+
+# Done
+
 * Template "Hello ${name}" with value "Reader" for variable "name" will be rendered as "Hello Reader" - Done
 * Template "${greeting}, ${name}" with the value "Reader" for variable "name" and value "Hi" for variable "greeting",
   will be rendered as "Hi, Reader" - Done
-* Rendering template "Hello, ${name}" with no value provided will lead to an MissingValueError
 * Template "Hello, ${name}" with the value "Reader" for variable "name" and value "whatever" for variable "unused",
-  will be rendered as "Hello, Reader"
-* Template "${one}, ${two}, ${three}" with the value "1" for variable "one", value ""${foo}" for variable "two" and
-  value "3" for variable "three" should render as "1, ${foo}, 3"
+  will be rendered as "Hello, Reader" - Done

@@ -49,4 +49,18 @@ class TemplateTest {
         // then
         assertThat(result).isEqualTo("1, 2, 3");
     }
+    
+    @Test
+    void ignoresUnusedVariable() {
+        // given
+        Template template = new Template("Hello, ${name}");
+        template.set("name", "Peter Griffin");
+        template.set("unused", "whatever");
+    
+        // when
+        String result = template.evaluate();
+    
+        // then
+        assertThat(result).isEqualTo("Hello, Peter Griffin");
+    }
 }
