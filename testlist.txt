@@ -11,3 +11,4 @@
 * Template "Hello, ${name}" with the value "Reader" for variable "name" and value "whatever" for variable "unused",
   will be rendered as "Hello, Reader" - Done
 * Rendering template "Hello, ${name}" with no value provided will lead to an MissingValueError - Done
+* A template with 100 words and 20 variables should be evaluated in 200 milliseconds max - Done
